@@ -115,7 +115,7 @@ body {
   Remove default button styles. We'll provide our own at the
   component level
 */
-button {
+/* button {
   display: block;
   margin: 0;
   padding: 0;
@@ -125,7 +125,7 @@ button {
   text-align: left;
   font: inherit;
   color: inherit;
-}
+} */
 
 /*
   Remove the default blue color of a tag
