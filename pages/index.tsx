@@ -6,8 +6,9 @@ import QuestionCard from '../components/QuestionCard';
 import { fetchQuizQuestions } from '../API';
 //types
 import { Difficulty, QuestionsState } from '../API';
+import mitt from 'next/dist/shared/lib/mitt';
 
-type AnswerObject = {
+export type AnswerObject = {
   question: string;
   answer: string;
   correct: boolean;
@@ -47,31 +48,65 @@ const Home: NextPage = () => {
 
   console.log('questions:', questions);
 
-  const checkAnswer = (e: React.MouseEvent<HTMLButtonElement>) => {};
+  const checkAnswer = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (!gameover) {
+      //users answer
+      const answer = e.currentTarget.value;
+      //check answer against correct answer
+      const correct = questions[number].correct_answer === answer;
+      //add score if answer is correct
+      if (correct) setScore(prev => prev + 1);
+      //save answer in the array for user answers
+      const answerObject = {
+        question: questions[number].question,
+        answer,
+        correct,
+        correctAnswer: questions[number].correct_answer,
+      };
+      setUserAnswers(prev => [...prev, answerObject]);
+    }
+  };
 
-  const nextQuestion = () => {};
+  const nextQuestion = () => {
+    //move on the next question if not the last question
+    const nextQuestion = number + 1;
+
+    if (nextQuestion === TOTAL_QUESTIONS) {
+      setGameover(true);
+    } else {
+      setNumber(nextQuestion);
+    }
+  };
 
   return (
     <PageWrapper>
-      <Title>Quiz APP</Title>
-      {gameover || userAnswers.length === TOTAL_QUESTIONS ? (
-        <button onClick={startTrivia}>start</button>
-      ) : null}
+      <QuizWrapper>
+        <Title>Quiz App</Title>
+        {gameover || userAnswers.length === TOTAL_QUESTIONS ? (
+          <StartButton onClick={startTrivia}>
+            {!gameover ? 'try again' : 'Start'}
+          </StartButton>
+        ) : null}
 
-      {!gameover ? <p>Score: </p> : null}
-      {loading && <p>Loading Questions...</p>}
-      {!loading && !gameover && (
-        <QuestionCard
-          questionNr={number + 1}
-          totalQuestions={TOTAL_QUESTIONS}
-          question={questions[number].question}
-          answers={questions[number].answers}
-          userAnswer={userAnswers ? userAnswers[number] : undefined}
-          callback={checkAnswer}
-        />
-      )}
-
-      <button onClick={nextQuestion}>Next Question</button>
+        {!gameover && <Score>Score: {score} </Score>}
+        {loading && <p>Loading Questions...</p>}
+        {!loading && !gameover && (
+          <QuestionCard
+            questionNr={number + 1}
+            totalQuestions={TOTAL_QUESTIONS}
+            question={questions[number].question}
+            answers={questions[number].answers}
+            userAnswer={userAnswers ? userAnswers[number] : undefined}
+            callback={checkAnswer}
+          />
+        )}
+        {!gameover &&
+        !loading &&
+        userAnswers.length === number + 1 &&
+        number !== TOTAL_QUESTIONS - 1 ? (
+          <NextButton onClick={nextQuestion}>Next Question</NextButton>
+        ) : null}
+      </QuizWrapper>
     </PageWrapper>
   );
 };
@@ -79,12 +114,61 @@ const Home: NextPage = () => {
 const PageWrapper = styled.div`
   max-width: 1200px;
   width: 90%;
-  margin: 0 auto;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+`;
+
+const QuizWrapper = styled.div`
+  width: 500px;
+  border: 2px solid gray;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: gainsboro;
 `;
 
 const Title = styled.h1`
   font-size: 50px;
   color: ${({ theme }) => theme.colors.primary};
+`;
+
+const Score = styled.p`
+  color: dimgray;
+  font-size: 2rem;
+`;
+
+const StartButton = styled.button`
+  font-size: 1.2rem;
+  cursor: pointer;
+  border: 2px solid lightgray;
+  border-radius: 8px;
+  height: 40px;
+  margin: 20px 0;
+  padding: 0 40px;
+
+  transform: scale(1);
+  transition: transform 250ms ease-in;
+
+  &:hover {
+    transform: scale(1.1);
+
+    transition: transform 250ms ease;
+    border: 2px solid silver;
+  }
+`;
+const NextButton = styled.button`
+  cursor: pointer;
+  border: 2px solid lightgray;
+  border-radius: 8px;
+  height: 40px;
+  margin: 20px 0;
+  padding: 0 40px;
+
+  &:hover {
+    border: 2px solid silver;
+  }
 `;
 
 export default Home;

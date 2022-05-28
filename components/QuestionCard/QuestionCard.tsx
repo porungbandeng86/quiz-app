@@ -1,14 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
+import { AnswerObject } from '../../pages';
 
 interface Props {
   question: string;
   answers: string[];
-  callback: any;
-  userAnswer: any;
+  callback: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  userAnswer: AnswerObject | undefined;
   questionNr: number;
   totalQuestions: number;
 }
+
+type ButtonWrapperProps = {
+  correct: boolean;
+  userClicked: boolean;
+};
 
 const QuestionCard: React.FC<Props> = ({
   question,
@@ -20,23 +26,60 @@ const QuestionCard: React.FC<Props> = ({
 }) => {
   return (
     <QuestionCardWrapper>
-      <p>
+      <QuestionCounter>
         Question: {questionNr}/ {totalQuestions}
-      </p>
-      <p dangerouslySetInnerHTML={{ __html: question }} />
-      <div>
+      </QuestionCounter>
+      <Question dangerouslySetInnerHTML={{ __html: question }} />
+      <ChoicesWrapper>
         {answers.map(answer => (
-          <div>
-            <button disabled={userAnswer} onClick={callback}>
+          <div key={answer}>
+            <ButtonWrapper
+              disabled={userAnswer ? true : false}
+              value={answer}
+              onClick={callback}
+              correct={userAnswer?.correctAnswer === answer}
+              userClicked={userAnswer?.answer === answer}
+            >
               <span dangerouslySetInnerHTML={{ __html: answer }} />
-            </button>
+            </ButtonWrapper>
           </div>
         ))}
-      </div>
+      </ChoicesWrapper>
     </QuestionCardWrapper>
   );
 };
 
 const QuestionCardWrapper = styled.div``;
+
+const ChoicesWrapper = styled.div`
+  margin-top: 16px;
+`;
+
+const QuestionCounter = styled.p`
+  font-size: 1.5rem;
+`;
+
+const Question = styled.p`
+  font-size: 1.5rem;
+`;
+
+const ButtonWrapper = styled.button<ButtonWrapperProps>`
+  transition: all 0.3s ease;
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.8 rem;
+  width: 100%;
+  height: 40px;
+  margin: 5px 0;
+  text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 1px 2px 0px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background: ${({ correct, userClicked }) =>
+    correct
+      ? 'linear-gradient(90deg, #56FFA4, #59BC86)'
+      : !correct && userClicked
+      ? 'linear-gradient(90deg, #FF5656, #C16868)'
+      : 'linear-gradient(90deg, #56ccff, #6eafb4)'};
+`;
 
 export default QuestionCard;
