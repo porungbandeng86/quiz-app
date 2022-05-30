@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { useState } from 'react';
 import type { NextPage } from 'next';
 import QuestionCard from '../components/QuestionCard';
@@ -111,6 +111,16 @@ const Home: NextPage = () => {
   );
 };
 
+//slide-in animation
+const slideIn = keyframes`
+  from {
+    transform: translateY(-500px);
+  }
+  to {
+    transform: translateY(0);
+  }
+`;
+
 const PageWrapper = styled.div`
   max-width: 1200px;
   width: 90%;
@@ -124,9 +134,10 @@ const PageWrapper = styled.div`
 const QuizWrapper = styled.div`
   width: 500px;
   border: 2px solid gray;
-  padding: 16px;
+  padding: 24px;
   border-radius: 8px;
   background-color: gainsboro;
+  animation: ${slideIn} 600ms ease-out both;
 `;
 
 const Title = styled.h1`
@@ -153,11 +164,11 @@ const StartButton = styled.button`
 
   &:hover {
     transform: scale(1.1);
-
     transition: transform 250ms ease;
     border: 2px solid silver;
   }
 `;
+
 const NextButton = styled.button`
   cursor: pointer;
   border: 2px solid lightgray;
