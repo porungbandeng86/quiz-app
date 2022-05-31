@@ -114,7 +114,7 @@ const Home: NextPage = () => {
 //slide-in animation
 const slideIn = keyframes`
   from {
-    transform: translateY(-500px);
+    transform: translateY(-600px);
   }
   to {
     transform: translateY(0);
@@ -138,6 +138,7 @@ const QuizWrapper = styled.div`
   border-radius: 8px;
   background-color: gainsboro;
   animation: ${slideIn} 600ms ease-out both;
+  animation-delay: 250ms;
 `;
 
 const Title = styled.h1`
@@ -159,12 +160,20 @@ const StartButton = styled.button`
   margin: 20px 0;
   padding: 0 40px;
 
-  transform: scale(1);
-  transition: transform 250ms ease-in;
+  transition: transform 150ms ease-in;
+  transform-origin: left top;
+  will-change: transform;
+  /* 
+  will-change is a property that allows us to hint to the browser 
+  that we're going to animate the selected element, 
+  and that it should optimize for this case. */
 
   &:hover {
     transform: scale(1.1);
     transition: transform 250ms ease;
+
+    transform-origin: left top;
+    will-change: transform;
     border: 2px solid silver;
   }
 `;
