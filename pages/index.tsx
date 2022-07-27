@@ -133,7 +133,7 @@ const PageWrapper = styled.div`
 
 const QuizWrapper = styled.div`
   width: 500px;
-  border: 2px solid gray;
+  /* border: 2px solid gray; */
   padding: 24px;
   border-radius: 8px;
   background-color: gainsboro;

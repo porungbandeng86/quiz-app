@@ -64,6 +64,7 @@ const Question = styled.p`
 `;
 
 const ButtonWrapper = styled.button<ButtonWrapperProps>`
+  border: none;
   transition: all 0.3s ease;
   cursor: pointer;
   user-select: none;
@@ -77,9 +78,7 @@ const ButtonWrapper = styled.button<ButtonWrapperProps>`
   background: ${({ correct, userClicked }) =>
     correct
       ? 'linear-gradient(90deg, #56FFA4, #59BC86)'
-      : !correct && userClicked
-      ? 'linear-gradient(90deg, #FF5656, #C16868)'
-      : 'linear-gradient(90deg, #56ccff, #6eafb4)'};
+      : 'linear-gradient(315deg, #ffffff 0%, #d7e1ec 74%)'};
 `;
 
 export default QuestionCard;
