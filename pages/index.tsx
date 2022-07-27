@@ -128,7 +128,7 @@ const PageWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100%;
+  height: 100%;
 `;
 
 const QuizWrapper = styled.div`
